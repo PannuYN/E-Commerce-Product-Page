@@ -8,7 +8,6 @@
     <link rel="icon" type="image/png" sizes="32x32"
       href="./images/favicon-32x32.png">
     <link href="./output.css" rel="stylesheet">
-    <link href="./custom.css" rel="stylesheet">
     <link
       href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
       rel="stylesheet">
@@ -17,8 +16,18 @@
     <title>Frontend Mentor | E-commerce product page</title>
 
   </head>
-  <body>
+  <body class="relative h-screen">
+    <!-- Mask (small screens) -->
+    <div id="black-mask-sm"
+      class="fixed inset-0 bg-black/70 pointer-events-none z-10 hidden md:hidden"></div>
+    <!-- Mask (large screens) -->
+    <div id="black-mask-lg"
+      class="md:fixed inset-0 bg-lightBoxBlack pointer-events-none z-10 hidden"></div>
+
+    <!-- whole body -->
     <div class="lg:w-[900px] md:w-[700px] mx-auto">
+
+      <!-- nav bar -->
       <nav
         class="flex justify-between items-center pt-4 pb-6 w-full border-b border-b-grayishBlue/30">
         <div class="flex">
@@ -30,12 +39,13 @@
           <!-- logo -->
           <div class="flex items-end"><img src="./images/logo.svg"
               class="mr-11 md:w-24 md:h-4 w-30 h-5" /></div>
+
           <!-- nav menu -->
           <div id="nav-menu"
             class="absolute top-0 left-[-100%] min-h-screen w-3/5
               bg-white p-6 md:p-0
               duration-300 overflow-hidden
-              md:static md:min-h-fit md:bg-transparent md:w-auto z-10">
+              md:static md:min-h-fit md:bg-transparent md:w-auto z-20">
             <!-- close icon -->
             <img id="close-nav" src="./images/icon-close.svg"
               class="mb-14 md:hidden" onclick="handleNavClose()" />
@@ -50,26 +60,27 @@
               <li><a>Contact</a></li>
             </ul>
           </div>
-
         </div>
+
         <!-- cart and avatar -->
         <div class="flex justify-center md:gap-6 gap-4 mr-6">
           <div
             class="flex items-center">
             <img src="./images/icon-cart.svg" class="md:w-4/6 w-4/5" />
           </div>
-          <div class="flex pr-2">
+          <div class="flex p-0 md:w-[43px] w-[20px] h-[20px] md:h-[43px] rounded-full border-2 border-transparent hover:border-2 hover:border-customOrange">
             <img src="./images/image-avatar.png"
-              class="md:w-[40px] w-[20px]" />
+              class="cursor-smallFist" />
           </div>
         </div>
       </nav>
+      <!-- navbar ends here -->
 
       <!-- body -->
       <div
         class="md:pt-10 flex flex-col md:flex-row justify-center items-center">
-        <!-- left section (sm) -->
-        <div class="relative md:hidden w-full z-0" id="carousel">
+        <!-- left section (sm)/ upper section -->
+        <div class="relative md:hidden w-full z-0" id="carousel-sm">
           <div class="overflow-hidden">
             <div
               class="flex h-[320px] transition-transform duration-500 ease-in-out"
@@ -86,11 +97,11 @@
           </div>
           <button
             class="absolute left-3 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-white rounded-full w-10 h-10"
-            onclick="moveCarousel('prev')"><img
+            onclick="moveCarousel('carousel-sm', 'prev')"><img
               src="./images/icon-previous.svg"></button>
           <button
             class="absolute right-3 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-white rounded-full w-10 h-10"
-            onclick="moveCarousel('next')"><img
+            onclick="moveCarousel('carousel-sm', 'next')"><img
               src="./images/icon-next.svg" /></button>
         </div>
 
@@ -100,39 +111,48 @@
           <!-- displayed image -->
           <div
             class="md:w-[320px] md:mb-4 w-full p-0 h-[400px] md:h-auto relative">
-            <img src="./images/image-product-1.jpg"
-              class="md:rounded-md object-cover w-full h-full" />
+            <img id="large-img" src="./images/image-product-1.jpg"
+              class="md:rounded-md object-cover w-full h-full cursor-smallFist"
+              onclick="openLightBox()" />
           </div>
           <!-- thumbnails -->
           <div class="w-[336px] md:flex justify-center items-center hidden">
             <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
                 class="rounded-xl hover:border-2 hover:border-customOrange"><img
                   src="./images/image-product-1-thumbnail.jpg"
+                  onclick="changeImage('large-img', this.src)"
                   class="rounded-xl hover:opacity-20" /></div></div>
             <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
                 class="rounded-xl hover:border-2 hover:border-customOrange"><img
                   src="./images/image-product-2-thumbnail.jpg"
+                  onclick="changeImage('large-img', this.src)"
                   class="rounded-xl hover:opacity-20" /></div></div>
             <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
                 class="rounded-xl hover:border-2 hover:border-customOrange"><img
                   src="./images/image-product-3-thumbnail.jpg"
+                  onclick="changeImage('large-img', this.src)"
                   class="rounded-xl hover:opacity-20" /></div></div>
             <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
                 class="rounded-xl hover:border-2 hover:border-customOrange"><img
                   src="./images/image-product-4-thumbnail.jpg"
+                  onclick="changeImage('large-img', this.src)"
                   class="rounded-xl hover:opacity-20" /></div></div>
           </div>
-
         </div>
+        <!-- left section ends here -->
+
         <!-- right section -->
         <div
           class="md:w-1/2 w-full flex flex-col justify-center lg:pr-14 md:pl-0 md:pr-10 p-5">
           <label
             class="text-darkGrayishBlue font-bold text-xs tracking-widest mb-3">SNEAKER
             COMPANY</label>
-          <h2 class="font-bold text-[2rem] md:mb-6 mb-3 leading-tight">Fall Limited Edition
+          <h2 class="font-bold text-[2rem] md:mb-6 mb-3 leading-tight">Fall
+            Limited Edition
             Sneakers</h2>
-          <p class="text-darkGrayishBlue/90 md:text-xs text-sm md:mb-3 mb-5">These low-profile
+          <p
+            class="text-darkGrayishBlue/90 md:text-xs text-sm md:mb-3 mb-5">These
+            low-profile
             sneakers are your
             perfect casual wear companion.
             Featuring
@@ -140,10 +160,13 @@
             durable rubber outer sole, they’ll withstand everything the weather
             can
             offer.</p>
+
           <!-- discount price -->
-          <div class="w-full pr-7 md:pr-0 flex md:flex-col md:items-start md:gap-4 justify-between items-center mb-6">
+          <div
+            class="w-full pr-7 md:pr-0 flex md:flex-col md:items-start md:gap-4 justify-between items-center mb-6">
             <div>
-              <label class="font-bold md:text-xl text-3xl mb-2 mr-2">$125.00</label>
+              <label
+                class="font-bold md:text-xl text-3xl mb-2 mr-2">$125.00</label>
               <span
                 class="bg-black rounded-md text-white font-bold md:text-xs md:px-2 md:py-0.5 px-2.5 py-1">50%</span>
             </div>
@@ -162,8 +185,11 @@
               <!-- '-' icon -->
               <img src="./images/icon-plus.svg" class="md:w-2 w-4" />
             </div>
+            <!-- button -->
             <button
-              class="bg-customOrange lg:gap-3 gap-1 flex justify-center md:rounded-md rounded-lg lg:px-12 md:px-6 items-center cursor-smallFist md:py-3 py-4 md:mx-0 mx-6 md:shadow-none shadow-lg shadow-customOrange/40">
+              class="bg-customOrange lg:gap-3 gap-1 flex justify-center
+              md:rounded-md rounded-lg lg:px-12 md:px-6 items-center cursor-smallFist
+              md:py-3 py-4 md:mx-0 mx-6 md:shadow-none shadow-lg shadow-customOrange/40 hover:bg-customOrange/50">
               <div class="flex items-center">
                 <img src="./images/icon-cart-black.svg" class="md:w-3 w-4" />
               </div>
@@ -171,8 +197,11 @@
                 cart</span></button>
           </div>
         </div>
+        <!-- right section ends here -->
+
       </div>
 
+      <!-- credit -->
       <div
         class="text-darkGrayishBlue text-xs flex justify-center items-end md:mt-3 mt-20">
         Challenge by <a href="https://www.frontendmentor.io?ref=challenge"
@@ -181,5 +210,54 @@
       </div>
 
     </div>
+    <!-- whole body ends -->
+
+    <!-- lightbox -->
+    <div id="lightbox"
+      class="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden flex-col justify-center items-center md:ml-4 md:mr-10">
+      <!-- close icon -->
+      <img src="./images/icon-close-white.svg"
+        class="ml-auto mb-3 cursor-smallFist" onclick="closeLightBox()" />
+      <!-- displayed image -->
+      <div
+        class="md:w-[360px] md:mb-4 w-full p-0 h-[400px] md:h-auto relative
+        transition-transform duration-500 ease-in-out">
+        <img id="lb-large-img"
+          class="md:rounded-lg object-cover w-full h-full" />
+        <button
+          class="absolute -left-5 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-white rounded-full w-10 h-10"
+          onclick="slideImage('prev')"><img
+            src="./images/icon-previous.svg"></button>
+        <button
+          class="absolute -right-5 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-white rounded-full w-10 h-10"
+          onclick="slideImage('next')"><img
+            src="./images/icon-next.svg" /></button>
+      </div>
+      <!-- thumbnails -->
+      <div class="w-[336px] md:flex justify-center items-center hidden">
+        <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
+            class="rounded-xl hover:border-2 hover:border-customOrange bg-white"><img
+              src="./images/image-product-1-thumbnail.jpg"
+              onclick="changeImage('lb-large-img', this.src)"
+              class="rounded-xl hover:opacity-20" /></div></div>
+        <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
+            class="rounded-xl hover:border-2 hover:border-customOrange bg-white"><img
+              src="./images/image-product-2-thumbnail.jpg"
+              onclick="changeImage('lb-large-img', this.src)"
+              class="rounded-xl hover:opacity-20" /></div></div>
+        <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
+            class="rounded-xl hover:border-2 hover:border-customOrange bg-white"><img
+              src="./images/image-product-3-thumbnail.jpg"
+              onclick="changeImage('lb-large-img', this.src)"
+              class="rounded-xl hover:opacity-20" /></div></div>
+        <div class="w-1/4 p-2 m-0 cursor-smallFist"><div
+            class="rounded-xl hover:border-2 hover:border-customOrange bg-white"><img
+              src="./images/image-product-4-thumbnail.jpg"
+              onclick="changeImage('lb-large-img', this.src)"
+              class="rounded-xl hover:opacity-20" /></div></div>
+      </div>
+    </div>
+    <!-- lightbox ends here -->
+
   </body>
 </html>
